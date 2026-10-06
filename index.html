@@ -1,119 +1,705 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SiteSense AI — Coming Soon</title>
-<meta name="description" content="SiteSense AI: computer vision for construction sites. Launching soon.">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SiteSense AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
+  /* Layout: single-column industrial scroll — hero, hazard scan, watchlist, market, close —
+     with a thin site-plan grid motif running behind section dividers. */
   :root{
     --bg:#EDEEF0; --surface:#FFFFFF; --fg:#1B1D21; --muted:#5B6168; --accent:#FF5A1F; --border:#D7D9DC;
+    --danger:#D64545; --safe:#2F9E58;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark){
-    :root{
+    :root:not([data-theme="light"]){
       --bg:#15171A; --surface:#1E2125; --fg:#EDEEF0; --muted:#9AA0A6; --accent:#FF6B35; --border:#2C3036;
+      --danger:#FF6B6B; --safe:#4ADE80;
       color-scheme: dark;
     }
   }
+  :root[data-theme="dark"]{
+    --bg:#15171A; --surface:#1E2125; --fg:#EDEEF0; --muted:#9AA0A6; --accent:#FF6B35; --border:#2C3036;
+    --danger:#FF6B6B; --safe:#4ADE80;
+    color-scheme: dark;
+  }
+
   *{box-sizing:border-box;}
-  html,body{height:100%; margin:0;}
   body{
     background:var(--bg); color:var(--fg);
     font-family:'IBM Plex Sans', system-ui, sans-serif;
-    display:flex; align-items:center; justify-content:center;
-    padding:24px;
+    padding-inline:20px;
   }
-  .card{
-    max-width:560px; width:100%; text-align:center;
-  }
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
-    text-transform:uppercase; color:var(--accent); display:block; margin-bottom:18px;
-  }
-  h1{
+  .wrap{max-width:860px; margin:0 auto;}
+  .display{
     font-family:'Big Shoulders Display', 'Arial Narrow', sans-serif;
     font-weight:800; text-transform:uppercase; letter-spacing:0.01em;
-    font-size:clamp(2.4rem,9vw,4rem); line-height:0.95; margin:0 0 20px;
+    text-wrap:balance; line-height:0.95;
   }
-  p.lede{
-    color:var(--muted); font-size:1.05rem; line-height:1.6; margin:0 auto 34px; max-width:40ch;
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  header{
+    position:sticky; top:env(safe-area-inset-top,0px);
+    display:flex; align-items:center; justify-content:space-between;
+    padding-block:18px; background:var(--bg); z-index:10;
+    border-bottom:1px solid var(--border);
   }
-  .site-plan{
-    border:1px solid var(--border); border-radius:4px;
-    background:
-      linear-gradient(var(--border) 1px, transparent 1px) 0 0/100% 28px,
-      linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 0/28px 100%,
-      var(--surface);
-    padding:22px; margin-bottom:30px;
+  .wordmark{display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.05rem;}
+  .wordmark .dot{width:10px; height:10px; background:var(--accent); border-radius:2px; flex:none;}
+  nav{display:flex; gap:22px; font-size:0.85rem; color:var(--muted);}
+  nav a{color:inherit; text-decoration:none;}
+  nav a:hover{color:var(--fg);}
+  @media (max-width:520px){ nav{display:none;} }
+
+  section{padding-block:56px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:14px; display:block;
   }
-  .progress-label{
-    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--muted);
-    text-transform:uppercase; letter-spacing:0.08em; display:flex; justify-content:space-between; margin-bottom:10px;
+  h1{font-size:clamp(2.6rem,7vw,4.6rem); margin:0 0 20px;}
+  h2{font-size:clamp(1.6rem,4vw,2.2rem); margin:0 0 8px;}
+  .lede{font-size:1.15rem; color:var(--muted); max-width:46ch; margin:0 0 30px; line-height:1.5;}
+  p{line-height:1.6; max-width:65ch;}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--accent); color:#15171A; font-weight:600;
+    padding:13px 22px; border-radius:3px; text-decoration:none; font-size:0.95rem;
+    border:none; cursor:pointer;
   }
-  .bar{height:8px; background:var(--border); border-radius:4px; overflow:hidden;}
-  .bar-fill{height:100%; width:35%; background:var(--accent); border-radius:4px;}
+  .btn:hover{filter:brightness(1.08);}
+  .btn.ghost{
+    background:transparent; color:var(--fg); border:1px solid var(--border);
+  }
+
+  .hero-mark{
+    margin-top:36px; border:1px solid var(--border); border-radius:4px;
+    background:var(--surface);
+    padding:18px;
+  }
+  .scan-canvas{display:block; width:100%; height:280px;}
+  .scan-legend{
+    display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; padding-top:14px;
+    border-top:1px solid var(--border); font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem; color:var(--muted); align-items:center;
+  }
+  .scan-legend .key{display:inline-flex; align-items:center; gap:6px;}
+  .scan-legend .swatch{width:9px; height:9px; border-radius:2px; display:inline-block;}
+
+  .steps{display:grid; gap:18px; grid-template-columns:repeat(3,1fr); margin-top:34px;}
+  @media (max-width:680px){ .steps{grid-template-columns:1fr;} }
+  .step{
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:22px; min-width:0;
+  }
+  .step .n{font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:2.1rem; color:var(--accent); line-height:1;}
+  .step h3{margin:10px 0 8px; font-size:1.05rem;}
+  .step p{margin:0; font-size:0.92rem; color:var(--muted); max-width:none;}
+  .step svg{margin-bottom:8px;}
+
+  .watch-grid{display:grid; gap:14px; grid-template-columns:repeat(2,1fr); margin-top:30px;}
+  @media (max-width:680px){ .watch-grid{grid-template-columns:1fr;} }
+  .watch-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:18px; min-width:0;
+  }
+  .watch-card h3{margin:0 0 8px; font-size:0.98rem; display:flex; align-items:center; gap:8px;}
+  .watch-card .sw{width:8px; height:8px; border-radius:50%; flex:none;}
+  .watch-card p{margin:0 0 10px; font-size:0.88rem; color:var(--muted); max-width:none;}
+  .watch-card .checks{
+    display:flex; flex-wrap:wrap; gap:6px; font-family:'IBM Plex Mono', monospace; font-size:0.68rem;
+  }
+  .watch-card .checks span{
+    border:1px solid var(--border); border-radius:20px; padding:3px 9px; color:var(--muted);
+  }
+
+  .market{
+    display:flex; gap:28px; align-items:center; margin-top:28px; flex-wrap:wrap;
+  }
+  .market svg{flex:none;}
+  .market .copy{min-width:240px; flex:1;}
+  .tag-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+  .tag{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; border:1px solid var(--border);
+    color:var(--muted); padding:5px 10px; border-radius:20px;
+  }
+
+  .divider{height:1px; background:var(--border); border:none; margin:0;}
+
+  .contact{
+    background:var(--surface); border:1px solid var(--border); border-radius:8px;
+    padding:34px; margin-top:20px; display:flex; justify-content:space-between;
+    align-items:center; gap:20px; flex-wrap:wrap;
+  }
   .email-chip{
-    display:inline-flex; align-items:center; gap:10px; font-family:'IBM Plex Mono', monospace;
-    font-size:0.95rem; border:1px solid var(--border); border-radius:4px; padding:12px 16px;
-    background:var(--surface); user-select:all;
+    display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono', monospace;
+    font-size:0.95rem; border:1px solid var(--border); border-radius:4px; padding:10px 14px;
+    background:var(--bg); user-select:all;
   }
   .email-chip button{
     font-family:inherit; font-size:0.78rem; background:none; border:1px solid var(--border);
-    color:var(--muted); border-radius:3px; padding:5px 9px; cursor:pointer;
+    color:var(--muted); border-radius:3px; padding:4px 8px; cursor:pointer; flex:none;
   }
   .email-chip button:hover{color:var(--fg); border-color:var(--fg);}
-  footer{margin-top:28px; color:var(--muted); font-size:0.8rem;}
+
+  footer{
+    padding-block:30px 48px; color:var(--muted); font-size:0.82rem;
+    display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
 </style>
-</head>
-<body>
-  <div class="card">
-    <span class="eyebrow">Computer vision for construction sites</span>
-    <h1>SiteSense AI<br>is coming soon</h1>
-    <p class="lede">We're building a live read on construction progress and safety, straight from the cameras already on your sites. Launching for UAE developers soon.</p>
 
-    <div class="site-plan">
-      <div class="progress-label"><span>Status</span><span>In development</span></div>
-      <div class="bar"><div class="bar-fill"></div></div>
+<div class="wrap">
+
+  <header>
+    <div class="wordmark"><span class="dot"></span>SiteSense AI</div>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#watch">What it watches</a>
+      <a href="#market">Market</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section id="top">
+    <span class="eyebrow">AI safety monitoring for construction sites</span>
+    <h1 class="display">Catch the hazard<br>before someone<br>gets hurt.</h1>
+    <p class="lede">SiteSense AI watches every camera on site for the things that actually injure workers — missing PPE, unsecured heights, exposed holes, blocked exits — and flags them in seconds, not at the next walk-through.</p>
+    <a class="btn" href="#contact">Get in touch</a>
+
+    <div class="hero-mark">
+      <canvas class="scan-canvas" id="scan-canvas" role="img" aria-label="Animated illustration of a construction site with a crane, scaffold, ladder, and workers, with an AI tracker moving between them, flagging hazards in red and confirming safe conditions in green"></canvas>
+      <div class="scan-legend" aria-hidden="true">
+        <span class="key"><span class="swatch" style="background:var(--danger)"></span>Hazard flagged</span>
+        <span class="key"><span class="swatch" style="background:var(--safe)"></span>Condition confirmed safe</span>
+        <span class="key"><span class="swatch" style="background:var(--accent)"></span>Scanning</span>
+      </div>
     </div>
+  </section>
 
-    <div class="email-chip">
-      <span id="email-text">hello@sitesense.ai</span>
-      <button id="copy-btn" type="button">Copy</button>
+  <hr class="divider">
+
+  <section id="how">
+    <span class="eyebrow">How it works</span>
+    <h2>From camera feed to warning</h2>
+    <p style="color:var(--muted)">Three steps, running continuously across every site in a portfolio.</p>
+
+    <div class="steps">
+      <div class="step">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><rect x="2" y="7" width="15" height="11" rx="2"/><path d="M17 10l5-3v10l-5-3"/></svg>
+        <div class="n">01</div>
+        <h3>Capture</h3>
+        <p>Existing site cameras stream footage in — no new hardware to install or manage.</p>
+      </div>
+      <div class="step">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M3 12a9 9 0 0 1 9-9M21 12a9 9 0 0 1-9 9"/></svg>
+        <div class="n">02</div>
+        <h3>Analyze</h3>
+        <p>A bank of purpose-built models checks each frame for fall risks, missing PPE, fire hazards, and structural conditions — in parallel, all the time.</p>
+      </div>
+      <div class="step">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><path d="M4 19V9M12 19V4M20 19v-6"/></svg>
+        <div class="n">03</div>
+        <h3>Alert</h3>
+        <p>Safety officers and site managers get the hazard the moment it's seen, with a snapshot — instead of finding out after someone's hurt.</p>
+      </div>
     </div>
+  </section>
 
-    <footer>Dubai, UAE &middot; &copy; 2026 SiteSense AI</footer>
-  </div>
+  <hr class="divider">
 
-  <script>
-    (function(){
-      var btn = document.getElementById('copy-btn');
-      var text = document.getElementById('email-text');
-      if(!btn) return;
-      btn.addEventListener('click', function(){
-        var value = text.textContent;
-        function fallback(){
-          try{
-            var range = document.createRange();
-            range.selectNodeContents(text);
-            var sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }catch(e){}
-        }
-        if(navigator.clipboard && navigator.clipboard.writeText){
-          navigator.clipboard.writeText(value).then(function(){
-            btn.textContent = 'Copied';
-            setTimeout(function(){ btn.textContent = 'Copy'; }, 1500);
-          }).catch(fallback);
-        } else {
-          fallback();
-        }
+  <section id="watch">
+    <span class="eyebrow">What it watches for</span>
+    <h2>A dedicated model for each hazard</h2>
+    <p style="color:var(--muted)">Not one general-purpose detector — a model trained for each specific risk, so each one is sharper than a jack-of-all-trades system would be.</p>
+
+    <div class="watch-grid">
+      <div class="watch-card">
+        <h3><span class="sw" style="background:var(--danger)"></span>Falls &amp; heights</h3>
+        <p>Guardrails, open edges, unsecured workers at height, and ladder or scaffold setups that aren't to code.</p>
+        <div class="checks">
+          <span>fall risk</span><span>secured worker</span><span>scaffold</span><span>ladder</span><span>stairway</span>
+        </div>
+      </div>
+      <div class="watch-card">
+        <h3><span class="sw" style="background:var(--danger)"></span>PPE &amp; worker conduct</h3>
+        <p>Face masks, correct PPE for the task at hand, and how workers are moving around the site.</p>
+        <div class="checks">
+          <span>face mask</span><span>PPE + action</span><span>worker detection</span>
+        </div>
+      </div>
+      <div class="watch-card">
+        <h3><span class="sw" style="background:var(--danger)"></span>Ground &amp; structural hazards</h3>
+        <p>Open holes, exposed rebar, loose cords and hoses underfoot, and blocked walkways.</p>
+        <div class="checks">
+          <span>open hole</span><span>impalement</span><span>cord / hose</span><span>trash container</span>
+        </div>
+      </div>
+      <div class="watch-card">
+        <h3><span class="sw" style="background:var(--danger)"></span>Fire &amp; emergency readiness</h3>
+        <p>Fire and smoke detection, and whether extinguishers are present and accessible where they need to be.</p>
+        <div class="checks">
+          <span>fire detection</span><span>extinguisher present</span>
+        </div>
+      </div>
+    </div>
+    <p style="color:var(--muted); font-size:0.9rem; margin-top:18px;">Plus scene-level coverage — depth mapping and equipment tracking — so the whole frame stays accounted for, not just the hazards named above.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section id="market">
+    <span class="eyebrow">Who it's for</span>
+    <h2>Built for UAE developers</h2>
+    <div class="market">
+      <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+        <rect x="4" y="4" width="112" height="112" rx="6" fill="none" stroke="var(--border)"/>
+        <rect x="20" y="60" width="16" height="40" fill="var(--muted)" opacity="0.5"/>
+        <rect x="42" y="40" width="16" height="60" fill="var(--accent)"/>
+        <rect x="64" y="52" width="16" height="48" fill="var(--muted)" opacity="0.5"/>
+        <rect x="86" y="30" width="16" height="70" fill="var(--fg)" opacity="0.7"/>
+      </svg>
+      <div class="copy">
+        <p>Real estate developers and general contractors running large, multi-site construction portfolios across the UAE — where a missed hazard costs far more than a missed deadline.</p>
+        <div class="tag-row">
+          <span class="tag">Worker safety</span>
+          <span class="tag">Multi-site portfolios</span>
+          <span class="tag">Compliance records</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="contact">
+    <span class="eyebrow">Get in touch</span>
+    <h2>Let's talk about your sites</h2>
+    <p style="color:var(--muted)">Early conversations welcome — whether you manage one site or fifty.</p>
+    <div class="contact">
+      <div class="email-chip">
+        <span id="email-text">hello@sitesense.ai</span>
+        <button id="copy-btn" type="button">Copy</button>
+      </div>
+      <a class="btn ghost" href="#top">Back to top</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 SiteSense AI</span>
+    <span class="mono">Dubai, UAE</span>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    var btn = document.getElementById('copy-btn');
+    var text = document.getElementById('email-text');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      var value = text.textContent;
+      function fallback(){
+        try{
+          var range = document.createRange();
+          range.selectNodeContents(text);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }catch(e){}
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(value).then(function(){
+          btn.textContent = 'Copied';
+          setTimeout(function(){ btn.textContent = 'Copy'; }, 1500);
+        }).catch(fallback);
+      } else {
+        fallback();
+      }
+    });
+  })();
+
+  // Hero animation: an illustrated job site — crane, scaffold frame, ladder,
+  // an open hole, a hose, an extinguisher, three workers — rendered as a
+  // mock live camera feed. An AI tracker (crosshair) moves between the
+  // fixed conditions in turn, locking on with a red box for a flagged
+  // hazard or a green box for a condition confirmed safe.
+  (function(){
+    var canvas = document.getElementById('scan-canvas');
+    if(!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var cssW = 0, cssH = 0;
+
+    function colors(){
+      var s = getComputedStyle(document.documentElement);
+      return {
+        border: s.getPropertyValue('--border').trim(),
+        accent: s.getPropertyValue('--accent').trim(),
+        muted: s.getPropertyValue('--muted').trim(),
+        fg: s.getPropertyValue('--fg').trim(),
+        bg: s.getPropertyValue('--bg').trim(),
+        surface: s.getPropertyValue('--surface').trim(),
+        danger: s.getPropertyValue('--danger').trim(),
+        safe: s.getPropertyValue('--safe').trim()
+      };
+    }
+
+    function hexMix(h1, h2, p){
+      function toRgb(h){
+        h = h.replace('#', '');
+        if(h.length === 3){ h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2]; }
+        var n = parseInt(h, 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      }
+      var a = toRgb(h1), b = toRgb(h2);
+      var r = Math.round(a[0] + (b[0] - a[0]) * p);
+      var g = Math.round(a[1] + (b[1] - a[1]) * p);
+      var bl = Math.round(a[2] + (b[2] - a[2]) * p);
+      return 'rgb(' + r + ',' + g + ',' + bl + ')';
+    }
+
+    function easeInOutCubic(p){
+      return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    }
+
+    var lastRectW = 0, lastRectH = 0;
+    function resize(){
+      var rect = canvas.getBoundingClientRect();
+      if(rect.width === 0 || rect.height === 0) return;
+      cssW = rect.width; cssH = rect.height;
+      if(rect.width === lastRectW && rect.height === lastRectH) return;
+      lastRectW = rect.width; lastRectH = rect.height;
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    var GROUND = 0.80;   // ground line, fraction of inner height
+    var padX = 16, padY = 14;
+
+    function fx(fracX, innerW){ return padX + fracX * innerW; }
+    function fy(fracY, innerH){ return padY + fracY * innerH; }
+
+    function drawShadow(cx, groundY, rx, c){
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle = c.fg;
+      ctx.beginPath(); ctx.ellipse(cx, groundY + 2, rx, rx * 0.28, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    function drawCautionTape(x0, y, x1, c){
+      var seg = 7, dx = (x1 - x0);
+      var n = Math.max(2, Math.round(Math.abs(dx) / seg));
+      ctx.lineWidth = 3;
+      for(var i = 0; i < n; i++){
+        var a = x0 + (dx * i) / n, b = x0 + (dx * (i + 1)) / n;
+        ctx.strokeStyle = i % 2 === 0 ? c.accent : c.fg;
+        ctx.beginPath(); ctx.moveTo(a, y); ctx.lineTo(b, y); ctx.stroke();
+      }
+    }
+
+    // Pictogram worker: head + torso + limbs, drawn around a foot anchor.
+    // pose: 'walk' | 'edge' | 'climb'
+    function drawWorker(cx, groundY, scale, color, pose, t, phase){
+      var headR = 4 * scale;
+      var hipY = groundY - 6 * scale;
+      var shoulderY = hipY - 13 * scale;
+      var headY = shoulderY - headR - 1.5 * scale;
+      ctx.strokeStyle = color; ctx.fillStyle = color;
+      ctx.lineWidth = 1.8 * scale; ctx.lineCap = 'round';
+
+      ctx.beginPath(); ctx.arc(cx, headY, headR, 0, Math.PI * 2); ctx.fill();
+      // hard hat brim
+      ctx.beginPath(); ctx.arc(cx, headY - headR * 0.2, headR + 1.2 * scale, Math.PI * 0.15, Math.PI * 0.85); ctx.stroke();
+
+      ctx.beginPath(); ctx.moveTo(cx, shoulderY); ctx.lineTo(cx, hipY); ctx.stroke();
+
+      if(pose === 'walk'){
+        var swing = Math.sin(t / 260 + phase) * 0.5;
+        ctx.beginPath(); ctx.moveTo(cx, hipY); ctx.lineTo(cx + swing * 9 * scale, groundY); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, hipY); ctx.lineTo(cx - swing * 9 * scale, groundY); ctx.stroke();
+        var armSwing = Math.sin(t / 260 + phase + Math.PI) * 0.4;
+        ctx.beginPath(); ctx.moveTo(cx, shoulderY); ctx.lineTo(cx + armSwing * 8 * scale, shoulderY + 10 * scale); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, shoulderY); ctx.lineTo(cx - armSwing * 8 * scale, shoulderY + 10 * scale); ctx.stroke();
+      } else if(pose === 'edge'){
+        ctx.beginPath(); ctx.moveTo(cx, hipY); ctx.lineTo(cx + 5 * scale, groundY); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, hipY); ctx.lineTo(cx - 4 * scale, groundY); ctx.stroke();
+        var reach = 1 + Math.sin(t / 700) * 0.15;
+        ctx.beginPath(); ctx.moveTo(cx, shoulderY); ctx.lineTo(cx + 11 * scale * reach, shoulderY - 4 * scale); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, shoulderY); ctx.lineTo(cx - 6 * scale, shoulderY + 9 * scale); ctx.stroke();
+      } else { // climb
+        ctx.beginPath(); ctx.moveTo(cx, hipY); ctx.lineTo(cx + 6 * scale, groundY + 2 * scale); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, hipY); ctx.lineTo(cx - 3 * scale, groundY - 4 * scale); ctx.stroke();
+        var reach2 = Math.sin(t / 500) * 2 * scale;
+        ctx.beginPath(); ctx.moveTo(cx, shoulderY); ctx.lineTo(cx + 8 * scale, shoulderY - 10 * scale + reach2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, shoulderY); ctx.lineTo(cx - 7 * scale, shoulderY - 6 * scale - reach2); ctx.stroke();
+      }
+    }
+
+    function drawScene(c, innerW, innerH, t){
+      var groundY = fy(GROUND, innerH);
+
+      // sky / ground bands
+      var sky = ctx.createLinearGradient(0, padY, 0, groundY);
+      sky.addColorStop(0, c.bg);
+      sky.addColorStop(1, hexMix(c.bg, c.accent, 0.1));
+      ctx.fillStyle = sky;
+      ctx.fillRect(padX, padY, innerW, groundY - padY);
+      ctx.fillStyle = c.border;
+      ctx.globalAlpha = 0.45;
+      ctx.fillRect(padX, groundY, innerW, (padY + innerH) - groundY);
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = c.muted;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(padX, groundY); ctx.lineTo(padX + innerW, groundY); ctx.stroke();
+
+      // crane
+      var mastX = fx(0.95, innerW);
+      ctx.strokeStyle = c.muted; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(mastX, fy(0.04, innerH)); ctx.lineTo(mastX, groundY); ctx.stroke();
+      var sway = Math.sin(t / 4200) * 0.05;
+      var pivot = {x: mastX, y: fy(0.055, innerH)};
+      var jibLen = innerW * 0.62;
+      var jibAngle = Math.PI + sway;
+      var jibEnd = {x: pivot.x + Math.cos(jibAngle) * jibLen, y: pivot.y + Math.sin(jibAngle) * jibLen * 0.12};
+      ctx.beginPath(); ctx.moveTo(pivot.x, pivot.y); ctx.lineTo(jibEnd.x, jibEnd.y); ctx.stroke();
+      var hookT = 0.62, hookX = pivot.x + (jibEnd.x - pivot.x) * hookT, hookY = pivot.y + (jibEnd.y - pivot.y) * hookT;
+      var hookDrop = fy(0.26, innerH) + Math.sin(t / 1800) * 3;
+      ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(hookX, hookY); ctx.lineTo(hookX, hookDrop); ctx.stroke();
+      ctx.fillStyle = c.muted; ctx.fillRect(hookX - 6, hookDrop, 12, 8);
+
+      // scaffold frame
+      var sx0 = fx(0.56, innerW), sx1 = fx(0.92, innerW), sxm = (sx0 + sx1) / 2;
+      var sTop = fy(0.18, innerH);
+      var sFloors = 4;
+      var sFh = (groundY - sTop) / sFloors;
+      ctx.strokeStyle = c.muted; ctx.lineWidth = 1.5;
+      [sx0, sxm, sx1].forEach(function(x){ ctx.beginPath(); ctx.moveTo(x, sTop); ctx.lineTo(x, groundY); ctx.stroke(); });
+      for(var i = 0; i <= sFloors; i++){
+        var y = sTop + i * sFh;
+        ctx.beginPath(); ctx.moveTo(sx0, y); ctx.lineTo(sx1, y); ctx.stroke();
+      }
+      ctx.globalAlpha = 0.6; ctx.lineWidth = 1;
+      for(var f = 0; f < sFloors; f++){
+        var yA = sTop + f * sFh, yB = sTop + (f + 1) * sFh;
+        ctx.beginPath(); ctx.moveTo(sx0, yA); ctx.lineTo(sxm, yB); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(sxm, yA); ctx.lineTo(sx1, yB); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+
+      // ladder (leaning against scaffold's left beam)
+      var lBotX = fx(0.46, innerW), lTopX = fx(0.555, innerW), lTopY = fy(0.40, innerH);
+      ctx.strokeStyle = c.fg; ctx.globalAlpha = 0.85; ctx.lineWidth = 1.6;
+      var railOffset = 5;
+      ctx.beginPath(); ctx.moveTo(lBotX - railOffset, groundY); ctx.lineTo(lTopX - railOffset, lTopY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lBotX + railOffset, groundY); ctx.lineTo(lTopX + railOffset, lTopY); ctx.stroke();
+      for(var r = 1; r < 6; r++){
+        var rp = r / 6;
+        var rx0 = lBotX - railOffset + (lTopX - railOffset - (lBotX - railOffset)) * rp;
+        var rx1 = lBotX + railOffset + (lTopX + railOffset - (lBotX + railOffset)) * rp;
+        var ry = groundY + (lTopY - groundY) * rp;
+        ctx.beginPath(); ctx.moveTo(rx0, ry); ctx.lineTo(rx1, ry); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+
+      // hose (wavy line on the ground)
+      ctx.strokeStyle = c.muted; ctx.lineWidth = 2.2; ctx.globalAlpha = 0.8;
+      ctx.beginPath();
+      var hy = groundY + 9;
+      ctx.moveTo(fx(0.02, innerW), hy);
+      ctx.bezierCurveTo(fx(0.12, innerW), hy - 7, fx(0.2, innerW), hy + 7, fx(0.30, innerW), hy - 4);
+      ctx.bezierCurveTo(fx(0.34, innerW), hy - 2, fx(0.36, innerW), hy + 3, fx(0.39, innerW), hy);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      // fire extinguisher (near ladder base)
+      var exX = fx(0.615, innerW), exY = groundY;
+      ctx.fillStyle = c.muted;
+      ctx.fillRect(exX - 4, exY - 22, 8, 18);
+      ctx.fillRect(exX - 2.5, exY - 26, 5, 4);
+      ctx.beginPath(); ctx.moveTo(exX, exY - 26); ctx.lineTo(exX + 7, exY - 29); ctx.stroke();
+
+      // open hole (ground, left), ringed with caution tape on two stakes
+      var hx = fx(0.15, innerW), hyy = groundY + 6, hr = innerW * 0.075;
+      ctx.fillStyle = c.bg; ctx.globalAlpha = 0.9;
+      ctx.beginPath(); ctx.ellipse(hx, hyy, hr, 7, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = c.muted; ctx.setLineDash([4, 3]); ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.ellipse(hx, hyy, hr, 7, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+      var stakeY0 = hyy - 16;
+      ctx.strokeStyle = c.muted; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(hx - hr - 2, hyy); ctx.lineTo(hx - hr - 2, stakeY0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(hx + hr + 2, hyy); ctx.lineTo(hx + hr + 2, stakeY0); ctx.stroke();
+      drawCautionTape(hx - hr - 2, stakeY0, hx + hr + 2, c);
+
+      // ground shadows for depth
+      drawShadow(fx(0.27, innerW), groundY, 10, c);
+      drawShadow(mastX, groundY, 7, c);
+      drawShadow(exX, exY, 7, c);
+      drawShadow(lBotX, groundY, 6, c);
+
+      // workers
+      drawWorker(fx(0.27, innerW), groundY, 1.15, c.fg, 'walk', t, 0);
+      drawWorker(sx1 - 10, sTop, 1.0, c.fg, 'edge', t, 0.6);
+      drawWorker((lBotX + lTopX) / 2 + 3, fy(0.62, innerH), 0.95, c.fg, 'climb', t, 1.2);
+
+      return {sx0: sx0, sxm: sxm, sx1: sx1, sTop: sTop, sFh: sFh, groundY: groundY,
+              lBotX: lBotX, lTopX: lTopX, lTopY: lTopY, hx: hx, hyy: hyy, exX: exX, exY: exY};
+    }
+
+    function targetsFor(geo, innerW, innerH){
+      return [
+        {cx: geo.sx1 - 10, cy: geo.sTop + 14, w: 30, h: 34, severity: 'hazard', text: 'Fall risk: no guardrail'},
+        {cx: fx(0.27, innerW), cy: geo.groundY - 14, w: 26, h: 34, severity: 'safe', text: 'Worker secured'},
+        {cx: (geo.sx0 + geo.sx1) / 2, cy: geo.sTop + geo.sFh * 1.5, w: geo.sx1 - geo.sx0 + 10, h: geo.sFh * 1.6, severity: 'safe', text: 'Scaffold: stable'},
+        {cx: (geo.lBotX + geo.lTopX) / 2 + 3, cy: fy(0.62, innerH) - 14, w: 26, h: 34, severity: 'hazard', text: 'Face mask missing'},
+        {cx: (geo.lBotX + geo.lTopX) / 2, cy: (geo.groundY + geo.lTopY) / 2, w: Math.abs(geo.lTopX - geo.lBotX) + 26, h: Math.abs(geo.groundY - geo.lTopY) + 10, severity: 'safe', text: 'Ladder: safe setup'},
+        {cx: (fx(0.02, innerW) + fx(0.39, innerW)) / 2, cy: geo.groundY + 9, w: fx(0.39, innerW) - fx(0.02, innerW) + 10, h: 26, severity: 'hazard', text: 'Trip hazard: hose'},
+        {cx: geo.exX, cy: geo.exY - 15, w: 22, h: 30, severity: 'safe', text: 'Extinguisher present'},
+        {cx: geo.hx, cy: geo.hyy, w: innerW * 0.15 + 10, h: 26, severity: 'hazard', text: 'Open hole hazard'}
+      ];
+    }
+
+    function drawDim(bx, c){
+      ctx.globalAlpha = 0.35; ctx.strokeStyle = c.muted; ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+      ctx.strokeRect(bx.cx - bx.w / 2, bx.cy - bx.h / 2, bx.w, bx.h);
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+
+    function drawLock(bx, alpha, c){
+      if(alpha <= 0) return;
+      var color = bx.severity === 'hazard' ? c.danger : c.safe;
+      var x = bx.cx - bx.w / 2, y = bx.cy - bx.h / 2;
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color; ctx.lineWidth = 1.8;
+      ctx.strokeRect(x, y, bx.w, bx.h);
+      var cl = 6;
+      ctx.lineWidth = 2.4;
+      [[x, y, 1, 0], [x, y, 0, 1], [x + bx.w, y, -1, 0], [x + bx.w, y, 0, 1],
+       [x, y + bx.h, 1, 0], [x, y + bx.h, 0, -1], [x + bx.w, y + bx.h, -1, 0], [x + bx.w, y + bx.h, 0, -1]
+      ].forEach(function(cfg){
+        ctx.beginPath(); ctx.moveTo(cfg[0], cfg[1]); ctx.lineTo(cfg[0] + cfg[2] * cl, cfg[1] + cfg[3] * cl); ctx.stroke();
       });
-    })();
-  </script>
-</body>
-</html>
+
+      ctx.font = '600 10px "IBM Plex Mono", monospace';
+      var mark = bx.severity === 'hazard' ? '! ' : '✓ ';
+      var label = mark + bx.text;
+      var textW = ctx.measureText(label).width;
+      var chipPad = 5, chipH = 16;
+      var chipY = y - chipH - 4;
+      if(chipY < 2) chipY = y + bx.h + 4;
+      var chipX = Math.max(2, Math.min(x, cssW - textW - chipPad * 2 - 2));
+      ctx.fillStyle = color;
+      ctx.fillRect(chipX, chipY, textW + chipPad * 2, chipH);
+      ctx.fillStyle = '#15171A';
+      ctx.fillText(label, chipX + chipPad, chipY + chipH - 5);
+      ctx.globalAlpha = 1;
+    }
+
+    function drawChrome(c, innerW, innerH, t){
+      var cl = 14;
+      ctx.strokeStyle = c.accent; ctx.lineWidth = 1.5;
+      [[padX, padY, 1, 1], [padX + innerW, padY, -1, 1], [padX, padY + innerH, 1, -1], [padX + innerW, padY + innerH, -1, -1]]
+        .forEach(function(cfg){
+          ctx.beginPath();
+          ctx.moveTo(cfg[0], cfg[1] + cfg[3] * cl); ctx.lineTo(cfg[0], cfg[1]); ctx.lineTo(cfg[0] + cfg[2] * cl, cfg[1]);
+          ctx.stroke();
+        });
+      if(Math.floor(t / 650) % 2 === 0){
+        ctx.fillStyle = c.danger;
+        ctx.beginPath(); ctx.arc(padX + 10, padY + 10, 3.5, 0, Math.PI * 2); ctx.fill();
+        ctx.font = '600 9px "IBM Plex Mono", monospace'; ctx.fillStyle = c.danger;
+        ctx.fillText('LIVE', padX + 17, padY + 13);
+      }
+      var secs = Math.floor(t / 1000);
+      var mm = ('0' + (Math.floor(secs / 60) % 60)).slice(-2);
+      var ss = ('0' + (secs % 60)).slice(-2);
+      ctx.fillStyle = c.muted; ctx.font = '500 9px "IBM Plex Mono", monospace';
+      ctx.fillText('CAM-04  ' + mm + ':' + ss, padX + 6, padY + innerH - 7);
+      var tag = '17 MODELS ACTIVE';
+      ctx.fillText(tag, padX + innerW - ctx.measureText(tag).width - 4, padY + innerH - 7);
+    }
+
+    function lerp(a, b, p){ return a + (b - a) * p; }
+
+    function runFrame(t, c, innerW, innerH, targetIdx, travelP, staticHighlights){
+      drawScene(c, innerW, innerH, t);
+      var geo = drawScene.lastGeo;
+      var targets = targetsFor(drawScene.lastGeo, innerW, innerH);
+      targets.forEach(function(bx){ drawDim(bx, c); });
+
+      if(staticHighlights){
+        staticHighlights.forEach(function(i){ drawLock(targets[i], 1, c); });
+        drawChrome(c, innerW, innerH, t);
+        return;
+      }
+
+      var n = targets.length;
+      var prev = targets[(targetIdx - 1 + n) % n];
+      var cur = targets[targetIdx];
+
+      if(travelP < 1){
+        var ep = easeInOutCubic(travelP);
+        var rx = lerp(prev.cx, cur.cx, ep), ry = lerp(prev.cy, cur.cy, ep);
+        ctx.strokeStyle = c.accent; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.9;
+        ctx.beginPath(); ctx.moveTo(rx - 9, ry); ctx.lineTo(rx + 9, ry); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(rx, ry - 9); ctx.lineTo(rx, ry + 9); ctx.stroke();
+        ctx.beginPath(); ctx.arc(rx, ry, 5, 0, Math.PI * 2); ctx.stroke();
+        ctx.globalAlpha = 1;
+      } else {
+        drawLock(cur, 1, c);
+      }
+      drawChrome(c, innerW, innerH, t);
+    }
+
+    // patch drawScene to stash last geometry for reuse without recomputing twice
+    var _drawScene = drawScene;
+    drawScene = function(c, innerW, innerH, t){
+      var geo = _drawScene(c, innerW, innerH, t);
+      drawScene.lastGeo = geo;
+      return geo;
+    };
+
+    if(reduceMotion){
+      function paintStatic(){
+        var rect = canvas.getBoundingClientRect();
+        if(!rect.width || !rect.height) { requestAnimationFrame(paintStatic); return; }
+        resize();
+        var innerW = cssW - padX * 2, innerH = cssH - padY * 2;
+        ctx.clearRect(0, 0, cssW, cssH);
+        runFrame(0, colors(), innerW, innerH, 0, 1, [0, 3, 7]);
+      }
+      paintStatic();
+      return;
+    }
+
+    var start = null;
+    var dwell = 1500, travel = 550, per = dwell + travel;
+
+    function tick(ts){
+      var rect = canvas.getBoundingClientRect();
+      if(!rect.width || !rect.height){ requestAnimationFrame(tick); return; }
+      resize();
+      if(start === null) start = ts;
+      var t = ts - start;
+      var innerW = cssW - padX * 2, innerH = cssH - padY * 2;
+      ctx.clearRect(0, 0, cssW, cssH);
+
+      var cycleCount = 8; // matches targets length
+      var idx = Math.floor(t / per) % cycleCount;
+      var phase = t % per;
+      var travelP = phase < travel ? phase / travel : 1;
+
+      ctx.font = '10px "IBM Plex Mono", monospace';
+      runFrame(t, colors(), innerW, innerH, idx, travelP, null);
+
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+</script>
+
+</body></html>
