@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiteSense AI — Coming Soon</title>
+<meta name="description" content="SiteSense AI: computer vision for construction sites. Launching soon.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EDEEF0; --surface:#FFFFFF; --fg:#1B1D21; --muted:#5B6168; --accent:#FF5A1F; --border:#D7D9DC;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#15171A; --surface:#1E2125; --fg:#EDEEF0; --muted:#9AA0A6; --accent:#FF6B35; --border:#2C3036;
+      color-scheme: dark;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%; margin:0;}
+  body{
+    background:var(--bg); color:var(--fg);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .card{
+    max-width:560px; width:100%; text-align:center;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--accent); display:block; margin-bottom:18px;
+  }
+  h1{
+    font-family:'Big Shoulders Display', 'Arial Narrow', sans-serif;
+    font-weight:800; text-transform:uppercase; letter-spacing:0.01em;
+    font-size:clamp(2.4rem,9vw,4rem); line-height:0.95; margin:0 0 20px;
+  }
+  p.lede{
+    color:var(--muted); font-size:1.05rem; line-height:1.6; margin:0 auto 34px; max-width:40ch;
+  }
+  .site-plan{
+    border:1px solid var(--border); border-radius:4px;
+    background:
+      linear-gradient(var(--border) 1px, transparent 1px) 0 0/100% 28px,
+      linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 0/28px 100%,
+      var(--surface);
+    padding:22px; margin-bottom:30px;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.08em; display:flex; justify-content:space-between; margin-bottom:10px;
+  }
+  .bar{height:8px; background:var(--border); border-radius:4px; overflow:hidden;}
+  .bar-fill{height:100%; width:35%; background:var(--accent); border-radius:4px;}
+  .email-chip{
+    display:inline-flex; align-items:center; gap:10px; font-family:'IBM Plex Mono', monospace;
+    font-size:0.95rem; border:1px solid var(--border); border-radius:4px; padding:12px 16px;
+    background:var(--surface); user-select:all;
+  }
+  .email-chip button{
+    font-family:inherit; font-size:0.78rem; background:none; border:1px solid var(--border);
+    color:var(--muted); border-radius:3px; padding:5px 9px; cursor:pointer;
+  }
+  .email-chip button:hover{color:var(--fg); border-color:var(--fg);}
+  footer{margin-top:28px; color:var(--muted); font-size:0.8rem;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="eyebrow">Computer vision for construction sites</span>
+    <h1>SiteSense AI<br>is coming soon</h1>
+    <p class="lede">We're building a live read on construction progress and safety, straight from the cameras already on your sites. Launching for UAE developers soon.</p>
+
+    <div class="site-plan">
+      <div class="progress-label"><span>Status</span><span>In development</span></div>
+      <div class="bar"><div class="bar-fill"></div></div>
+    </div>
+
+    <div class="email-chip">
+      <span id="email-text">hello@sitesense.ai</span>
+      <button id="copy-btn" type="button">Copy</button>
+    </div>
+
+    <footer>Dubai, UAE &middot; &copy; 2026 SiteSense AI</footer>
+  </div>
+
+  <script>
+    (function(){
+      var btn = document.getElementById('copy-btn');
+      var text = document.getElementById('email-text');
+      if(!btn) return;
+      btn.addEventListener('click', function(){
+        var value = text.textContent;
+        function fallback(){
+          try{
+            var range = document.createRange();
+            range.selectNodeContents(text);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }catch(e){}
+        }
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(value).then(function(){
+            btn.textContent = 'Copied';
+            setTimeout(function(){ btn.textContent = 'Copy'; }, 1500);
+          }).catch(fallback);
+        } else {
+          fallback();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
