@@ -192,13 +192,15 @@
   <header>
     <div class="wordmark">
       <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
-        <g class="frame" fill="none" stroke-width="6" stroke-linecap="square" stroke-linejoin="miter">
-          <path d="M8 23 V9 H22"/>
-          <path d="M56 23 V9 H42"/>
-          <path d="M8 41 V55 H22"/>
-          <path d="M56 41 V55 H42"/>
+        <defs><clipPath id="eyeClipHeader"><path d="M8,32 Q32,10 56,32 Q32,54 8,32 Z"/></clipPath></defs>
+        <g class="frame" fill="none" stroke-width="4" stroke-linecap="round">
+          <path d="M8,32 Q32,10 56,32 Q32,54 8,32 Z"/>
+          <g clip-path="url(#eyeClipHeader)" stroke-width="3">
+            <line x1="15" y1="15" x2="49" y2="49"/>
+            <line x1="49" y1="15" x2="15" y2="49"/>
+          </g>
         </g>
-        <rect class="dot" x="24" y="24" width="16" height="16" rx="2.5"/>
+        <circle class="dot" cx="32" cy="32" r="7.5"/>
       </svg>
       SiteSensor
     </div>
@@ -328,8 +330,13 @@
     <div class="contact">
       <div class="founder-card">
         <div class="founder-avatar">
-          <svg viewBox="0 0 50 50" fill="none" stroke="var(--accent)" stroke-width="2">
-            <path d="M2 14V2h12M48 14V2H36M2 36v12h12M48 36v12H36"/>
+          <svg viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2.5">
+            <defs><clipPath id="eyeClipAvatar"><path d="M8,32 Q32,10 56,32 Q32,54 8,32 Z"/></clipPath></defs>
+            <path d="M8,32 Q32,10 56,32 Q32,54 8,32 Z"/>
+            <g clip-path="url(#eyeClipAvatar)" stroke-width="2">
+              <line x1="15" y1="15" x2="49" y2="49"/>
+              <line x1="49" y1="15" x2="15" y2="49"/>
+            </g>
           </svg>
           <span>KC</span>
         </div>
