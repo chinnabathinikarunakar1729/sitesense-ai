@@ -1,5 +1,13 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>SiteSense AI</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiteSense AI — AI safety monitoring for construction sites</title>
+<meta name="description" content="SiteSense AI watches every camera on a construction site for the hazards that actually injure workers, and flags them in seconds.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
@@ -45,7 +53,9 @@
     border-bottom:1px solid var(--border);
   }
   .wordmark{display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.05rem;}
-  .wordmark .dot{width:10px; height:10px; background:var(--accent); border-radius:2px; flex:none;}
+  .wordmark .mark{width:22px; height:22px; flex:none;}
+  .wordmark .mark .frame{stroke:var(--fg);}
+  .wordmark .mark .dot{fill:var(--accent);}
   nav{display:flex; gap:22px; font-size:0.85rem; color:var(--muted);}
   nav a{color:inherit; text-decoration:none;}
   nav a:hover{color:var(--fg);}
@@ -146,11 +156,23 @@
     display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
   }
 </style>
-
+</head>
+<body>
 <div class="wrap">
 
   <header>
-    <div class="wordmark"><span class="dot"></span>SiteSense AI</div>
+    <div class="wordmark">
+      <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+        <g class="frame" fill="none" stroke-width="6" stroke-linecap="square" stroke-linejoin="miter">
+          <path d="M8 23 V9 H22"/>
+          <path d="M56 23 V9 H42"/>
+          <path d="M8 41 V55 H22"/>
+          <path d="M56 41 V55 H42"/>
+        </g>
+        <rect class="dot" x="24" y="24" width="16" height="16" rx="2.5"/>
+      </svg>
+      SiteSense AI
+    </div>
     <nav>
       <a href="#how">How it works</a>
       <a href="#watch">What it watches</a>
@@ -701,5 +723,5 @@
     requestAnimationFrame(tick);
   })();
 </script>
-
-</body></html>
+</body>
+</html>
